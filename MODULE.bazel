@@ -1,0 +1,27 @@
+module(
+    name = "rules_rust_bzlmod_nocargo",
+)
+
+bazel_dep(name = "rules_rust", version = "0.0.0")
+
+# needed the fix for #2585
+git_override(
+    module_name = "rules_rust",
+    remote = "https://github.com/ericmcbride/rules_rust",
+    commit = "47a269287c5c259bd5de5c345b3296a9cd4a9e68",
+)
+
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(edition = "2021")
+use_repo(rust, "rust_toolchains")
+
+register_toolchains("@rust_toolchains//:all")
+
+crate = use_extension("@rules_rust//crate_universe:extension.bzl", "crate")
+crate.spec(
+    package = "ort",
+    version = "=2.0.0-alpha.4",
+    default_features = False,
+)
+crate.from_specs()
+use_repo(crate, "crates")
