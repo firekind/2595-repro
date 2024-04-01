@@ -1,3 +1,0 @@
-module(
-    name = "rules_rust_bzlmod_nocargo",
-)
